@@ -2,6 +2,9 @@ import { useState } from 'react'
 import Home from './pages/Home'
 import Sidebar from './cmp/Sidebar'
 import { Box } from '@mui/material'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 
 function App() {
@@ -9,7 +12,7 @@ function App() {
 
   return (
     <>
-   <Box
+   {/* <Box
       sx={{
         display: "flex",
         height: "100vh", // Full screen height
@@ -18,7 +21,29 @@ function App() {
     >
         <Sidebar />
         <Home />
-    </Box>
+    </Box> */}
+    
+    <BrowserRouter>
+      <Routes>
+        {/* Default Route */}
+        <Route path="/" element={<Navigate to="/login" />} />
+
+        {/* Auth Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* 404 Page */}
+        <Route
+          path="*"
+          element={
+            <h2 style={{ textAlign: "center", marginTop: "50px" }}>
+              404 - Page Not Found
+            </h2>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+
     </>
   )
 }
