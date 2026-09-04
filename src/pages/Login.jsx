@@ -12,6 +12,10 @@ import {
 
 import { BrowserRouter, Routes, Route, Navigate,Link } from "react-router-dom";
 
+import { ToastContainer, toast } from 'react-toastify';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 
 
@@ -19,6 +23,8 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const Navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,8 +36,36 @@ function Login() {
 
     setError("");
 
-    console.log({ email, password });
-    alert("Login Successful ✅");
+    const registerPromise = axios.post(
+      "http://localhost:8080/api/ChatRoom/Login",
+      {
+        Email:email,
+        Password: password,
+      }
+    );
+
+    // Toast Promise
+    toast.promise(registerPromise, {
+      pending: "Trying To Login...",
+      success: "Login Successfully!",
+      error: {
+        render({ data }) {
+          return data?.response?.data?.msg || "❌ Login Successful";
+        },
+      },
+    });
+
+    registerPromise
+    .then((res) => {
+      setEmail("");
+      setPassword("");
+      Navigate("/chat-room");
+      console.log(res.data)
+
+    })
+    .catch(() => {});
+
+    
   };
 
   return (

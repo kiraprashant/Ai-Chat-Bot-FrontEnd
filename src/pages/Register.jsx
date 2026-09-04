@@ -12,21 +12,25 @@ import {
 } from "@mui/material";
 
 import { BrowserRouter, Routes, Route, Navigate,Link } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 // MUI Icon
 
 
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("prashant");
+  const [email, setEmail] = useState("prashantnair1999@gmail.com");
+  const [password, setPassword] = useState("123");
+  const [confirmPassword, setConfirmPassword] = useState("123");
   const [error, setError] = useState("");
+  const Navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    try {
     // Validation
     if (!name || !email || !password || !confirmPassword) {
       setError("All fields are required");
@@ -46,7 +50,41 @@ function Register() {
       password,
     });
 
-    alert("Registration Successful ✅");
+    const registerPromise = axios.post(
+      "http://localhost:8080/api/ChatRoom/AddUser",
+      {
+        FullName:name,
+        Email:email,
+        Password: password,
+      }
+    );
+
+    // Toast Promise
+    toast.promise(registerPromise, {
+      pending: "Registering...",
+      success: "Registered Successfully!",
+      error: {
+        render({ data }) {
+          return data?.response?.data?.msg || "❌ Registration Failed";
+        },
+      },
+    });
+
+    // After Success
+    registerPromise
+      .then((res) => {
+        setName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("")
+        Navigate("/login");
+
+      })
+      .catch(() => {});
+  }
+  catch(e){
+     console.log(e)
+  }
   };
 
   return (

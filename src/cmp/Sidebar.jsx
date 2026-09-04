@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import ListSideMessage from "./ListSideMessage";
 import { IoMdLogOut } from "react-icons/io";
@@ -7,19 +7,39 @@ import { PiCodesandboxLogoFill } from "react-icons/pi";
 import { BiSolidEdit } from "react-icons/bi";
 import { Typography } from "@mui/material";
 import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from "react-redux";
+import {AddToChat} from "../Redux/Slices/ChatSlices"
+import { Link } from "react-router-dom";
+import { IoIosArrowDown } from "react-icons/io";
+
 
 function Sidebar() {
   const [Toggle, setToggle] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [unique,setunique] = useState(uuidv4())
+  const Dispatch = useDispatch()
+
+
+  const GetChatDetails = useSelector((state) => state.ChatData.ChatData);
+  const [AllList,setAllList] = useState(GetChatDetails)
+
+  const sortedChats = [...GetChatDetails].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
 
   const CreateNewId = () =>{
     setunique(uuidv4())
+    setActiveIndex(0)
   }
+
+
+   console.log(GetChatDetails)
 
 
   return (
     <Box
+    
       sx={{
         width: Toggle ? "360px" : "60px",
         backgroundColor: "#000021",
@@ -41,6 +61,12 @@ function Sidebar() {
         {Toggle ? <PiCodesandboxLogoFill size={24} /> : null}
         <FiSidebar onClick={() => setToggle(!Toggle)} size={24} />
       </Box>
+      <Link 
+       style={{
+          color:"white",
+            textDecoration:"none"
+       }}
+      to = {`${unique}`}> 
       <Box sx={{ px: 1 }}>
         <Box
           sx={{
@@ -53,39 +79,45 @@ function Sidebar() {
             display: "flex",
             alignItems: "center",
             cursor: "pointer",
+          
             
           }}
           onClick={() => CreateNewId()}
         >
+         
           <BiSolidEdit size={24} style={{ paddingRight: Toggle ? "8px" : 0 }} />
           {Toggle ? (
-            <Typography variant="subtitle2"> New Chat </Typography>
-          ) : null}{" "}
+           <Typography variant="subtitle2"> New Chat </Typography>
+          ) : null}
+          
         </Box>
       </Box>
+      </Link>
       {/* Top + Middle */}
       <Box sx={{ flexGrow: 1, overflow: "auto" }}>
         {/* Header */}
 
         {/* Menu */}
         {Toggle ? (
-          <Box sx={{ px: 1 }}>
+          <Box sx={{ px: 1,display:"flex",alignItems:"center" }}>
             <Typography
               sx={{ p: 1, fontWeight: 500, opacity: 0.8 }}
               variant="body1"
             >
-              My Chat {unique}
+              My Chat
             </Typography>
+            <IoIosArrowDown />
           </Box>
         ) : null}
 
         {Toggle ? (
           <Box sx={{ p: 1 }}>
-            {[0, 1, 2, 3, 4].map((i) => (
+            {sortedChats.map((elem,i) => (
               <ListSideMessage
                 key={i}
-                active={activeIndex === i}
-                onClick={() => setActiveIndex(i)}
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
+                data={elem}
               />
             ))}
 
@@ -105,7 +137,9 @@ function Sidebar() {
           alignItems: "center",
         }}
       >
-        {Toggle ? <Typography variant="body1">Prashant Nair</Typography> : null}
+        {Toggle ? <Link to = "/profile/" > <Typography variant="body1" sx={{
+          color:"#fff"
+        }}>Prashant Nair</Typography> </Link>  : null} 
         <IoMdLogOut size={24} color="red" />
       </Box>
     </Box>

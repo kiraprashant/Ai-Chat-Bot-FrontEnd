@@ -6,15 +6,65 @@ import remarkGfm from "remark-gfm";
 import { IoMdLogOut } from "react-icons/io";
 import { LuSend } from "react-icons/lu";
 import { motion } from "framer-motion";
+import { useParams } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
+import {AddToChat} from "../Redux/Slices/ChatSlices"
+import { useDispatch, useSelector } from "react-redux";
 
 
-function Home() {
+
+
+
+
+function ChatConversion() {
   const [input, setinput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const Dispatch = useDispatch()
+
+
+  const { id } = useParams();
+
+  const [Unquie, setUnquie] = useState();
+
+  useEffect(() =>{
+    if(id){
+      setUnquie(id)
+      setMessages([])
+    }
+    else{
+      setUnquie(uuidv4())
+      setMessages([])
+    }
+    
+  },[id])
+
+
 
 
   const bottomRef = useRef(null);
+
+  function makeShortTitle(text) {
+    const stopWords = new Set([
+      "is","are","the","a","an","why","how","what","when","where",
+      "can","do","does","did","and","or","but","of","to","in","on",
+      "for","with","about","than","so","very","much","which", "feel" ,"like"
+    ]);
+  
+  
+  
+    const newTitle = text
+      .toLowerCase()
+      .match(/\b[a-z0-9]+\b/gi) // only words
+      ?.filter(w => !stopWords.has(w))
+      .slice(0, 4)
+      .map(w => w[0].toUpperCase() + w.slice(1))
+      .join(" ") || "Chat";
+  
+      console.log(newTitle)
+  
+      return newTitle
+  }
 
   // Auto scroll
   // useEffect(() => {
@@ -65,32 +115,42 @@ function Home() {
 
     console.log(data);
 
-    const openrouter = new OpenRouter({
-      apiKey:
-        "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",
-    });
 
-    const stream = await openrouter.chat.send({
-      model: "tngtech/deepseek-r1t2-chimera:free",
-      messages: data,
-      stream: true,
-    });
 
-    for await (const chunk of stream) {
-      const content = chunk.choices[0]?.delta?.content;
-      const text = content.replace(/[“”]/g, '"');
-      if (text) {
-        setMessages((prev) => {
-          const updated = [...prev];
+    // const stream = await openrouter.chat.send({
+    //   model: "tngtech/deepseek-r1t2-chimera:free",
+    //   messages: data,
+    //   stream: true,
+    // });
 
-          updated[aiIndex] = {
-            ...updated[aiIndex],
-            content: updated[aiIndex].content + text,
-          };
-          return updated;
-        });
+    // for await (const chunk of stream) {
+    //   const content = chunk.choices[0]?.delta?.content;
+    //   const text = content.replace(/[“”]/g, '"');
+    //   if (text) {
+    //     setMessages((prev) => {
+    //       const updated = [...prev];
+
+    //       updated[aiIndex] = {
+    //         ...updated[aiIndex],
+    //         content: updated[aiIndex].content + text,
+    //       };
+    //       return updated;
+    //     });
+    //   }
+    // }
+
+    makeShortTitle(input)
+
+    if(messages.length <= 1){
+      const ChatTitile = {
+        ChatId:Unquie,
+        Email:"Nair@GMAIL.COM",
+        TiTle:makeShortTitle(input),
+        Created_At:new Date()
       }
+      Dispatch(AddToChat(ChatTitile))
     }
+
 
     setLoading(false);
   };
@@ -100,7 +160,7 @@ function Home() {
       sx={{
         height: "100vh",
         width: "100%",
-        bgcolor: "#fff",
+        bgcolor: "#050412",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden", // ✅ No page scroll
@@ -108,12 +168,13 @@ function Home() {
     >
       <Typography
           sx={{
-            borderBottom: "1px solid #d6d6d6",
+            borderBottom: "1px solid #1f2937",
             p: 2,
+            color:"#fff"
           }}
           variant="body1"
         >
-          Grok 4
+          Grok 4 {Unquie}
         </Typography>
       {/* Top Content */}
       <Box
@@ -215,7 +276,40 @@ function Home() {
             sx={{
               "& .MuiInputBase-root": {
                 paddingRight: "80px", // space for button
+                color:"#fff",
+                backgroundColor: "#1F2937", // ✅ input background
+                borderColor: "#6B7280",
+                borderRadius: "12px",
+                "&.Mui-focused fieldset": {
+                  borderColor: "#6B7280",
+                },
               },
+              "& .MuiInputLabel-root": {
+                color: "#9CA3AF", // label color (light grey)
+              },
+
+              "&.Mui-focused fieldset": {
+                borderColor: "#6B7280",
+              },
+          
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "#fff", // label when focused
+              },
+
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#374151", // default border
+                },
+                "&:hover fieldset": {
+                  borderColor: "#374151", // default border
+                },
+                "&:hover fieldset": {
+                  borderColor: "#374151", // default border
+                },
+              },
+          
+              borderColor:"red",
+              color:"#fff"
             }}
           label="Chat to Kira Ai"
           value={input}
@@ -227,7 +321,7 @@ function Home() {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault(); // Stop new line
-              handleSend(); // Call send function
+              sendMessage(); // Call send function
             }
           }}
         />
@@ -253,4 +347,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default ChatConversion;
