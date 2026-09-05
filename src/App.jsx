@@ -9,7 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import ChatRoom from './pages/ChatRoom'
 import ChatConversion from './cmp/ChatConversion'
 import Profile from './pages/Profile'
-import ProfileInformation from './cmp/ProfileInformation'
+import ProfileInformation from './pages/ProfileInformation'
 import AccountSetting from './pages/AccountSetting'
 
 

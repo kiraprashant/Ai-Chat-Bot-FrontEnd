@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Grid, Typography, Avatar } from "@mui/material";
 import { hover } from "framer-motion";
 import { FaRegEdit } from "react-icons/fa";
-import Profilefield from "./Profilefield";
+import Profilefield from "../cmp/Profilefield";
 
 const ProfileInformation = () => {
   const [Users, setUser] = useState({

@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import {AddToChat} from "../Redux/Slices/ChatSlices"
 import { Link } from "react-router-dom";
 import ProfileMenu from "./ProfileMenu";
+import { FaUser,FaUserCog,FaBolt,FaUserShield,FaChartBar } from "react-icons/fa";
+import { FaCircleCheck } from "react-icons/fa6";
 
 const ProfileSideBar = () => {
 
@@ -25,37 +27,37 @@ const ProfileSideBar = () => {
             id: "profile-information",
             Name: "Profile Information",
             NavLink: "/profile/",
-            Icon: "User",
+            Icon: FaUser ,
         },
         {
             id: "account",
             Name: "Account",
             NavLink: "/profile/account",
-            Icon: "Settings",
+            Icon: FaUserCog ,
         },
         {
             id: "account-status",
             Name: "Account Status",
             NavLink: "/profile/status",
-            Icon: "Activity",
+            Icon: FaCircleCheck,
         },
         {
             id: "quick-actions",
             Name: "Quick Actions",
             NavLink: "/profile/actions",
-            Icon: "Zap",
+            Icon: FaBolt ,
         },
         {
             id: "account-verification",
             Name: "Account Verification",
             NavLink: "/profile/verification",
-            Icon: "ShieldCheck",
+            Icon: FaUserShield ,
         },
         {
             id: "account-usage",
             Name: "Account Usage",
             NavLink: "/profile/usage",
-            Icon: "BarChart3",
+            Icon: FaChartBar,
         },
     ];
 
