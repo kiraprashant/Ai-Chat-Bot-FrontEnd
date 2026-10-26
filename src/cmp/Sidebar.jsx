@@ -14,15 +14,19 @@ import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
 
 
+
 function Sidebar() {
   const [Toggle, setToggle] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [unique,setunique] = useState(uuidv4())
   const Dispatch = useDispatch()
 
+  
 
   const GetChatDetails = useSelector((state) => state.ChatData.ChatData);
   const [AllList,setAllList] = useState(GetChatDetails)
+
+  console.log("GetChatDetails : ", GetChatDetails)
 
   const sortedChats = [...GetChatDetails].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -113,7 +117,7 @@ function Sidebar() {
 
         {Toggle ? (
           <Box sx={{ p: 1 }}>
-            {sortedChats.map((elem,i) => (
+            {GetChatDetails.map((elem,i) => (
               <ListSideMessage
                 key={i}
                 activeIndex={activeIndex}

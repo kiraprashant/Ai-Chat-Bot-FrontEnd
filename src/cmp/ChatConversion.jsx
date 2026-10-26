@@ -24,6 +24,7 @@ function ChatConversion() {
   const [selectedModel, setSelectedModel] = useState("");
   const [ModelRepiled, setModelRepiled] = useState("");
 
+
   const { id } = useParams();
 
   const [Unquie, setUnquie] = useState();
@@ -37,6 +38,24 @@ function ChatConversion() {
       setMessages([]);
     }
   }, [id]);
+
+  useEffect(() => {
+
+    const fetchDataMessage = async() =>{
+
+      console.log("working")
+      const response = await axios.get(
+        `http://localhost:8080/api/Message/Allmessage/${id}`
+      );
+      
+      console.log("all meesages" , response.data.data);
+      setMessages(response.data.data)
+    }
+
+    fetchDataMessage();
+
+  },[id])
+
 
   useEffect(() => {
     const getModels = async () => {
@@ -141,6 +160,26 @@ const sendMessage = async () => {
   const recentMessages = history.slice(-5);
   const aiIndex = history.length;
 
+  try {
+    const response = await axios.post(
+      "http://localhost:8080/api/Message",
+      {
+        ChatId: Unquie,
+        MessageId: crypto.randomUUID(),
+        Role: "user",
+        Name:"Kira",
+        Content:question ,
+      }
+    );
+  
+    console.log("Chat message saved:", response.data);
+  } catch (error) {
+    console.error(
+      "Failed to save chat message:",
+      error.response?.data || error.message
+    );
+  }
+
   setMessages([
     ...history,
     { role: "assistant", content: "", model: selectedModel },
@@ -148,6 +187,10 @@ const sendMessage = async () => {
 
   setinput("");
   setLoading(true);
+
+
+
+
 
   try {
     const response = await fetch(
@@ -219,6 +262,28 @@ const sendMessage = async () => {
           streamFinished = true;
 
           console.log("Stream completed:", data);
+
+          try {
+            const response = await axios.post(
+              "http://localhost:8080/api/Message",
+              {
+                ChatId: Unquie,
+                MessageId: crypto.randomUUID(),
+                Role: "assistant",
+                Content: aiContent,
+                Name:"Ai"
+              }
+            );
+          
+            console.log("Chat message saved:", response.data);
+          } catch (error) {
+            console.error(
+              "Failed to save chat message:",
+              error.response?.data || error.message
+            );
+          }
+
+
         }
 
         if (data.type === "error") {
@@ -238,14 +303,35 @@ const sendMessage = async () => {
       const chatTitle = {
         ChatId: Unquie,
         Email: "Nair@GMAIL.COM",
-        TiTle: title,
+        Title: title,
         Created_At: new Date(),
       };
 
       Dispatch(AddToChat(chatTitle));
+
+
+
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/api/ChatHistory/",
+          chatTitle
+        );
+      
+        console.log("Chat history saved:", response.data);
+      } catch (error) {
+        console.error(
+          "Failed to save chat history:",
+          error.response?.data || error.message
+        );
+      }
+
+
     }
   } catch (error) {
-    console.error("Chat API error:", error.message);
+    console.error("Chat API error:", error);
+
+ 
 
     setMessages((prev) =>
       prev.map((msg, index) =>
@@ -260,6 +346,9 @@ const sendMessage = async () => {
   } finally {
     setLoading(false);
   }
+
+
+
 };
 
 

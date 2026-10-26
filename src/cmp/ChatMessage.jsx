@@ -8,7 +8,7 @@ import { IoMdLogOut } from "react-icons/io";
 
 const ChatMessage = memo(function ChatMessage({ msg, selectedModel }) {
   console.log("msg :", msg);
-  const isUser = msg.role === "user";
+  const isUser = msg.role === "user" ||  msg.Role === "user"  ;
 
   return (
     <Box
@@ -485,7 +485,7 @@ const ChatMessage = memo(function ChatMessage({ msg, selectedModel }) {
                   ),
                 }}
               >
-                {msg.content}
+                {msg.Content || msg.content }
               </ReactMarkdown>
             </Box>
           )}

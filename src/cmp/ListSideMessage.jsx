@@ -1,17 +1,22 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { Box } from "@mui/material";
 import { Typography } from "@mui/material";
 import { Link ,useNavigate} from 'react-router-dom';
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { AddToChat } from "../Redux/Slices/ChatSlices";
 
 
 
 
 function ListSideMessage({data,activeIndex,setActiveIndex}) {
-  console.log(data)
+  console.log("feched " , data.Email)
+  
 
   const navigate = useNavigate();
 
   const isActive = activeIndex === data.ChatId;
+
 
   const handleClick = () => {
     setActiveIndex(data.ChatId);       // highlight
@@ -47,7 +52,7 @@ function ListSideMessage({data,activeIndex,setActiveIndex}) {
         maxWidth: "260px", // IMPORTANT
       }}
     
-    variant='body2'></Typography>{data.TiTle}</Box>
+    variant='body2'></Typography>{data.Title}</Box>
    
   )
 }
