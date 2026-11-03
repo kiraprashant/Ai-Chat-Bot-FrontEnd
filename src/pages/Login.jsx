@@ -9,6 +9,8 @@ import {
   Container,
   Paper,
 } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
+
 
 import { BrowserRouter, Routes, Route, Navigate,Link } from "react-router-dom";
 
@@ -19,10 +21,13 @@ import { useNavigate } from "react-router-dom";
 
 
 
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [unique,setunique] = useState(uuidv4())
+
 
   const Navigate = useNavigate()
 
@@ -39,8 +44,11 @@ function Login() {
     const registerPromise = axios.post(
       "http://localhost:8080/api/ChatRoom/Login",
       {
-        Email:email,
+        Email: email,
         Password: password,
+      },
+      {
+        withCredentials: true,
       }
     );
 
@@ -59,7 +67,8 @@ function Login() {
     .then((res) => {
       setEmail("");
       setPassword("");
-      Navigate("/chat-room");
+      setunique(uuidv4())
+      Navigate("/chat-room/"+unique);
       console.log(res.data)
 
     })

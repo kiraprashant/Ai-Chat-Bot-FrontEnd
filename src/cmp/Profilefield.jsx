@@ -1,14 +1,31 @@
 import { Box, Grid, Typography, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { FaRegEdit } from "react-icons/fa";
 
-const Profilefield = ({ label, value, isEditable, multiline }) => {
-  console.log("multiline", multiline);
+const Profilefield = ({ 
+  id,
+  label,
+  value,
+  isEditable,
+  multiline,
+  onChange, }) => {
+
+  
   const [Inputable, setInputable] = useState(false);
+  const [inputValue, setInputValue] = useState(value ?? "");
+
+  useEffect(() => {
+    setInputValue(value ?? "");
+  }, [value]);
+
+  console.log("Field ID:", id);
+
   const handleClick = () => {
     console.log("clicked");
     setInputable(!Inputable);
   };
+
+
   return (
     <Box
       sx={{
@@ -50,55 +67,37 @@ const Profilefield = ({ label, value, isEditable, multiline }) => {
           {label}
         </Typography>
 
-        {Inputable ? (
-          <TextField
-            multiline={multiline}
-            rows={multiline ? 3 : undefined}
-
-            sx={{
-              backgroundColor: "#0b1020",
-              width: "100%",
-              lineHeight:1.4,
-
-              "& .MuiInputBase-input": {
-                color: "#fff",
-              },
-
-              // Border radius
-              "& .MuiOutlinedInput-root": {
-                //   borderRadius: "8px !important ",
-              },
-
-              // Normal border
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(255, 255, 255, 0.2)",
-              },
-
-              // Hover border
-              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "rgba(255, 255, 255, 0.3)",
-                },
-
-              // Focused border
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "rgba(255, 255, 255, 0.4)",
-                },
-            }}
-            fullWidth
-            size="small"
-            id="outlined-basic"
-            variant="outlined"
-            defaultValue={value}
-          />
-        ) : (
-          <>
-            <Typography sx={{ color: "#fff", fontWeight: 500 }} variant="body1">
-              {value}
-            </Typography>
-          </>
-        )}
+        {Inputable && isEditable ? (
+  <TextField
+    multiline={multiline}
+    rows={multiline ? 3 : undefined}
+    fullWidth
+    size="small"
+    value={inputValue}
+    onChange={(e) => {
+      const newValue = e.target.value;
+    
+      setInputValue(newValue);
+      onChange(id, newValue);
+    }}
+    sx={{
+      backgroundColor: "#0b1020",
+      "& .MuiInputBase-input": {
+        color: "#fff",
+      },
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "rgba(255,255,255,0.2)",
+      },
+    }}
+  />
+) : (
+  <Typography
+    sx={{ color: "#fff", fontWeight: 500 }}
+    variant="body1"
+  >
+    {inputValue || ""}
+  </Typography>
+)}
       </Box>
     </Box>
   );

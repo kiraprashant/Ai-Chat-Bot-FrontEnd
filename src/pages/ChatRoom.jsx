@@ -6,12 +6,24 @@ import { BrowserRouter, Routes, Route, Navigate,Outlet } from "react-router-dom"
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { AddToChat,GetAllchat } from "../Redux/Slices/ChatSlices";
+import axiosInstance from '../cmp/Auth/Intance';
+import { GetProfileBYID } from "../Redux/Slices/UserSlices";
 
 
 
 const ChatRoom = () => {
   const Dispatch = useDispatch()
 
+  const dispatch = useDispatch();
+
+const { User, Loading, Error } = useSelector(
+  (state) => state.UserData
+);
+
+
+useEffect(() => {
+  dispatch(GetProfileBYID());
+}, [dispatch]);
 
   useEffect(() => {
     const fetchChatHistory = async () => {
@@ -36,6 +48,23 @@ const ChatRoom = () => {
     };
   
     fetchChatHistory();
+
+    const GetProfileBYID = async () => {
+      try {
+        const response = await axiosInstance.get("/ChatRoom/profile");
+        console.log(response.data.user);
+      } catch (error) {
+        console.error(
+          "Profile error:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    // GetProfileBYID()
+    // fetchChatHistory();
+
+   
   }, []);
 
 

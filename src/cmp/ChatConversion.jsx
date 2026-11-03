@@ -203,6 +203,8 @@ const sendMessage = async () => {
         body: JSON.stringify({
           messages: recentMessages,
           model: selectedModel,
+          Email:"Nair@gmail.com",
+          Token:1000
         }),
       }
     );
