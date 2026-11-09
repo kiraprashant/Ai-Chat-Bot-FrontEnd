@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { FormControl, Select, MenuItem } from "@mui/material";
 import ChatMessage from "./ChatMessage";
+import axiosInstance from "./Auth/Intance"
 
 function ChatConversion() {
   const [input, setinput] = useState("");
@@ -44,8 +45,8 @@ function ChatConversion() {
     const fetchDataMessage = async() =>{
 
       console.log("working")
-      const response = await axios.get(
-        `http://localhost:8080/api/Message/Allmessage/${id}`
+      const response = await axiosInstance.get(
+        `Message/Allmessage/${id}`
       );
       
       console.log("all meesages" , response.data.data);
@@ -60,8 +61,8 @@ function ChatConversion() {
   useEffect(() => {
     const getModels = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:8080/api/ChatModel/List-Model"
+        const response = await axiosInstance.get(
+          "ChatModel/List-Model"
         );
 
         const modelList = response.data.Models;
@@ -315,7 +316,7 @@ const sendMessage = async () => {
 
 
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           "http://localhost:8080/api/ChatHistory/",
           chatTitle
         );

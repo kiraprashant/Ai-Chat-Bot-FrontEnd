@@ -11,6 +11,9 @@ import ChatConversion from './cmp/ChatConversion'
 import Profile from './pages/Profile'
 import ProfileInformation from './pages/ProfileInformation'
 import AccountSetting from './pages/AccountSetting'
+import AccountStatus from './pages/AccountStatus'
+import AccountVerification from './pages/AccountVerification'
+import QuickActions from './pages/QuickAction'
 
 
 function App() {
@@ -36,6 +39,7 @@ function App() {
         {/* <Route path="/" element={<Navigate to="/login" />} /> */}
 
         {/* Auth Routes */}
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chat-room" element={<ChatRoom />} >
@@ -45,6 +49,10 @@ function App() {
            <Route path='/profile' element={<Profile />} >
            <Route path="/profile/" element={<ProfileInformation />} />
            <Route path='/profile/account' element={<AccountSetting />} />
+           <Route path='/profile/status' element={<AccountStatus />} />
+           <Route path='/profile/quick-action' element={<QuickActions />} />
+           <Route path='/profile/verification' element={<AccountVerification />} />
+
         </Route>
 
 

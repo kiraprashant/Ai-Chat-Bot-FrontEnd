@@ -6,97 +6,120 @@ import { FiSidebar } from "react-icons/fi";
 import { PiCodesandboxLogoFill } from "react-icons/pi";
 import { BiSolidEdit } from "react-icons/bi";
 import { Typography } from "@mui/material";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import { useDispatch, useSelector } from "react-redux";
-import {AddToChat} from "../Redux/Slices/ChatSlices"
+import { AddToChat } from "../Redux/Slices/ChatSlices";
 import { Link } from "react-router-dom";
 import { IoIosArrowDown } from "react-icons/io";
-
-
 
 function Sidebar() {
   const [Toggle, setToggle] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [unique,setunique] = useState(uuidv4())
-  const Dispatch = useDispatch()
-
-  
+  const [unique, setunique] = useState(uuidv4());
+  const Dispatch = useDispatch();
 
   const GetChatDetails = useSelector((state) => state.ChatData.ChatData);
-  const [AllList,setAllList] = useState(GetChatDetails)
+  const [AllList, setAllList] = useState(GetChatDetails);
 
-  console.log("GetChatDetails : ", GetChatDetails)
+  console.log("GetChatDetails : ", GetChatDetails);
 
   const sortedChats = [...GetChatDetails].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
+  const CreateNewId = () => {
+    setunique(uuidv4());
+    setActiveIndex(0);
+  };
 
-  const CreateNewId = () =>{
-    setunique(uuidv4())
-    setActiveIndex(0)
-  }
-
-
-   console.log(GetChatDetails)
-
+  console.log(GetChatDetails);
 
   return (
     <Box
-    
       sx={{
         width: Toggle ? "360px" : "60px",
         backgroundColor: "#000021",
         color: "white",
         display: "flex",
         flexDirection: "column",
+        transition: "width 0.2s ease, min-width 0.2s ease",
+        boxSizing: "border-box",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          fontSize: "16px",
-          p: 2,
-          mb: 2,
+    <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: Toggle ? "space-between" : "center",
+    height: "64px",
+    px: Toggle ? 2 : 0,
+    flexShrink: 0,
+    mb: 1,
+    boxSizing: "border-box",
+  }}
+>
+  {Toggle && (
+    <PiCodesandboxLogoFill
+      size={24}
+      style={{
+        flexShrink: 0,
+      }}
+    />
+  )}
+
+  <Box
+    onClick={() => setToggle(!Toggle)}
+    sx={{
+      width: "40px",
+      height: "40px",
+      minWidth: "40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+      cursor: "pointer",
+      borderRadius: "50%",
+      transition: "background-color 0.2s ease",
+      "&:hover": {
+        backgroundColor: "rgba(255,255,255,0.2)",
+      },
+    }}
+  >
+    <FiSidebar size={22} />
+  </Box>
+</Box>
+      <Link
+        style={{
+          color: "white",
+          textDecoration: "none",
         }}
+        to={`${unique}`}
       >
-        {Toggle ? <PiCodesandboxLogoFill size={24} /> : null}
-        <FiSidebar onClick={() => setToggle(!Toggle)} size={24} />
-      </Box>
-      <Link 
-       style={{
-          color:"white",
-            textDecoration:"none"
-       }}
-      to = {`${unique}`}> 
-      <Box sx={{ px: 1 }}>
-        <Box
-          sx={{
-            // backgroundColor:"rgba(255,255,255,0.3)",
-            p: 1,
-            fontSize: 18,
-            pt: 1,
-            borderRadius: 2,
-            mb: 1,
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-          
-            
-          }}
-          onClick={() => CreateNewId()}
-        >
-         
-          <BiSolidEdit size={24} style={{ paddingRight: Toggle ? "8px" : 0 }} />
-          {Toggle ? (
-           <Typography variant="subtitle2"> New Chat </Typography>
-          ) : null}
-          
+        <Box sx={{ px: 1 }}>
+          <Box
+            sx={{
+              // backgroundColor:"rgba(255,255,255,0.3)",
+              p: 1,
+              fontSize: 18,
+              pt: 1,
+              borderRadius: 2,
+              mb: 1,
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+            onClick={() => CreateNewId()}
+          >
+            <BiSolidEdit
+              size={24}
+              style={{ paddingRight: Toggle ? "8px" : 0 }}
+            />
+            {Toggle ? (
+              <Typography variant="subtitle2"> New Chat </Typography>
+            ) : null}
+          </Box>
         </Box>
-      </Box>
       </Link>
       {/* Top + Middle */}
       <Box sx={{ flexGrow: 1, overflow: "auto" }}>
@@ -104,7 +127,7 @@ function Sidebar() {
 
         {/* Menu */}
         {Toggle ? (
-          <Box sx={{ px: 1,display:"flex",alignItems:"center" }}>
+          <Box sx={{ px: 1, display: "flex", alignItems: "center" }}>
             <Typography
               sx={{ p: 1, fontWeight: 500, opacity: 0.8 }}
               variant="body1"
@@ -117,7 +140,7 @@ function Sidebar() {
 
         {Toggle ? (
           <Box sx={{ p: 1 }}>
-            {GetChatDetails.map((elem,i) => (
+            {GetChatDetails.map((elem, i) => (
               <ListSideMessage
                 key={i}
                 activeIndex={activeIndex}
@@ -125,7 +148,6 @@ function Sidebar() {
                 data={elem}
               />
             ))}
-
           </Box>
         ) : null}
       </Box>
@@ -142,9 +164,19 @@ function Sidebar() {
           alignItems: "center",
         }}
       >
-        {Toggle ? <Link to = "/profile/" > <Typography variant="body1" sx={{
-          color:"#fff"
-        }}>Prashant Nair</Typography> </Link>  : null} 
+        {Toggle ? (
+          <Link to="/profile/">
+            {" "}
+            <Typography
+              variant="body1"
+              sx={{
+                color: "#fff",
+              }}
+            >
+              Prashant Nair
+            </Typography>{" "}
+          </Link>
+        ) : null}
         <IoMdLogOut size={24} color="red" />
       </Box>
     </Box>

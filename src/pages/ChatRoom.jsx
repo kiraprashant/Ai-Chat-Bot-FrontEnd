@@ -29,7 +29,7 @@ useEffect(() => {
     const fetchChatHistory = async () => {
       console.log("Caaliling")
       try {
-        const response = await axios.post(
+        const response = await axiosInstance.post(
           "http://localhost:8080/api/ChatHistory/GetChatHistory",
           {
             Email: "Nair@GMAIL.COM",
@@ -49,17 +49,6 @@ useEffect(() => {
   
     fetchChatHistory();
 
-    const GetProfileBYID = async () => {
-      try {
-        const response = await axiosInstance.get("/ChatRoom/profile");
-        console.log(response.data.user);
-      } catch (error) {
-        console.error(
-          "Profile error:",
-          error.response?.data || error.message
-        );
-      }
-    };
 
     // GetProfileBYID()
     // fetchChatHistory();
