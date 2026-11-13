@@ -1,54 +1,77 @@
+
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-function ProfileMenu({ data }) {
-  const navigate = useNavigate();
+const ProfileMenu = ({ data, Toggle }) => {
   const location = useLocation();
 
   const isActive = location.pathname === data.NavLink;
-
-  const handleClick = () => {
-    navigate(data.NavLink);
-  };
-
   const Icon = data.Icon;
 
   return (
-    <Box
-      onClick={handleClick}
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 1.5,
-        p: 1.5,
-        mb: 1,
-        borderRadius: 2,
-        cursor: "pointer",
-        backgroundColor: isActive ? "#111827" : "transparent",
-        borderLeft:isActive?"3px solid #a855f7" : "3px solid transpatent",
-        transition:"all 0.2s ease", 
-        boxShadow:isActive? "0 0 8px rgba(168,85,247,0.55)" : "none",
-
-        "&:hover": {
-          backgroundColor: "#1f2937",
-        },
+    <Link
+      to={data.NavLink}
+      style={{
+        color: "white",
+        textDecoration: "none",
+        display: "block",
+        width: "100%",
       }}
     >
-      {Icon && <Icon size={20} />}
-
-      <Typography
-        variant="body2"
+      <Box
         sx={{
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
+          width: "100%",
+          minHeight: "42px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: Toggle ? "flex-start" : "center",
+          gap: Toggle ? 1.5 : 0,
+          px: Toggle ? 1.5 : 0,
+          py: 1,
+          boxSizing: "border-box",
+          borderRadius: "8px",
+          cursor: "pointer",
+          backgroundColor: isActive
+            ? "rgba(20,184,166,0.15)"
+            : "transparent",
+          color: isActive ? "#14b8a6" : "#cbd5e1",
+          transition: "background-color 0.2s ease",
+          "&:hover": {
+            backgroundColor: isActive
+              ? "rgba(20,184,166,0.2)"
+              : "rgba(255,255,255,0.08)",
+          },
         }}
       >
-        {data.Name}
-      </Typography>
-    </Box>
+        <Box
+          sx={{
+            width: "24px",
+            height: "24px",
+            minWidth: "24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <Icon size={18} />
+        </Box>
+
+        {Toggle && (
+          <Typography
+            sx={{
+              fontSize: "13px",
+              fontWeight: isActive ? 600 : 400,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {data.Name}
+          </Typography>
+        )}
+      </Box>
+    </Link>
   );
-}
+};
 
 export default ProfileMenu;
